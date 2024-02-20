@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 126437725369271641, guid: 5b62aa33507a4dd48bdd31a8cd45cd3c, type: 3}
+      propertyPath: junkChance
+      value: 0.275
+      objectReference: {fileID: 0}
+    - target: {fileID: 126437725369271641, guid: 5b62aa33507a4dd48bdd31a8cd45cd3c, type: 3}
       propertyPath: rockCount.x
       value: 45
       objectReference: {fileID: 0}
@@ -30,6 +34,10 @@ PrefabInstance:
     - target: {fileID: 126437725369271641, guid: 5b62aa33507a4dd48bdd31a8cd45cd3c, type: 3}
       propertyPath: treesCount.y
       value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 126437725369271641, guid: 5b62aa33507a4dd48bdd31a8cd45cd3c, type: 3}
+      propertyPath: eadibleChance
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 126437725369271641, guid: 5b62aa33507a4dd48bdd31a8cd45cd3c, type: 3}
       propertyPath: huntingChance

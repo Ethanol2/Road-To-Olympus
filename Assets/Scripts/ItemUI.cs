@@ -54,7 +54,7 @@ public class ItemUI : MonoBehaviour
     {
         item = newItem;
 
-        this.name = item.name;
+        this.name = item.DisplayName;
 
         icon.sprite = item.Sprite;
         text.text = item.name;

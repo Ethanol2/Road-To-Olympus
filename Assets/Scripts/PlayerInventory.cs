@@ -109,19 +109,41 @@ public class PlayerInventoryEditor : UnityEditor.Editor
 
         GUILayout.Space(15f);
 
-        GUILayout.Label("Current Inventory");
-        GUILayout.BeginScrollView(scroll);
-        foreach (Item item in Inventory.ItemReferences)
+        if (Application.isPlaying)
         {
-            int count = Inventory.GetItemCount(item);
-            if (count == 0) { continue; }
+            GUILayout.Label("Current Inventory");
+            GUILayout.BeginScrollView(scroll);
+            foreach (Item item in Inventory.ItemReferences)
+            {
+                int count = Inventory.GetItemCount(item);
+                if (count == 0) { continue; }
 
-            GUILayout.BeginHorizontal();
-            UnityEditor.EditorGUILayout.ObjectField(item, typeof(Item), false);
-            GUILayout.Label($"x {count}");
-            GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                UnityEditor.EditorGUILayout.ObjectField(item, typeof(Item), false);
+                GUILayout.Label($"x {count}");
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
         }
-        GUILayout.EndScrollView();
+        else
+        {
+            if (GUILayout.Button("Add All Items to References"))
+            {
+                var guids = UnityEditor.AssetDatabase.FindAssets("t:item");
+
+                UnityEditor.SerializedProperty refs = serializedObject.FindProperty("itemReferences");
+                refs.arraySize = guids.Length;
+
+                int index = 0;
+                foreach (string guid in guids)
+                {
+                    refs.GetArrayElementAtIndex(index).objectReferenceValue = UnityEditor.AssetDatabase.LoadAssetAtPath<Item>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+                    index++;
+                }
+            }
+        }
+
+        serializedObject.ApplyModifiedProperties();
     }
 }
 #endif

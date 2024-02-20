@@ -154,11 +154,13 @@ public class ProgressTracker : MonoBehaviour
             forageButtonText.text = "Too Hungry to Forage";
             return; 
         }
+        PlayerStats.Hunger -= hungerPerForage;
         if (PlayerStats.Rest < tirednessPerForage)
         {
             forageButtonText.text = "Too Tired to Forage";
             return;
         }
+        PlayerStats.Rest -= tirednessPerForage;
 
         dayNightCycle.AddTime(Mathf.RoundToInt(DayNightCycle.TOTAL_MINUTES * timePerForage));
 
@@ -166,17 +168,22 @@ public class ProgressTracker : MonoBehaviour
         float chance = CurrentPoint.ForagingChance * CurrentPoint.ForagingModifier;
         for (int k = 0; k < maxItemsPerForage; k++)
         {
+            Debug.Log("Foraging chance: " + chance);
+
             float result = Random.Range(0f, 1f);
             if (result <= chance)
             {
                 numItemsFound++;
-                chance *= 0.75f;
+                chance *= 0.85f;
             }
             else
             {
                 break;
             }
         }
+
+        CurrentPoint.ForagingModifier *= 0.75f;
+        
         if (numItemsFound == 0) 
         {
             ModalController.OpenModal("Bad Luck", "You didn't find anything...");
@@ -202,7 +209,6 @@ public class ProgressTracker : MonoBehaviour
             InventoryManager.Instance.Add(PlayerInventory.GetRandom(Inventory.ItemReferences, mods), 0);
         }
 
-        CurrentPoint.ForagingModifier *= 0.75f;
     }
     public void Rest()
     {

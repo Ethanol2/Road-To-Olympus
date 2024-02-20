@@ -91,7 +91,7 @@ public class InventoryManager : MonoBehaviour
     {
         ModalController.OpenModal(
             $"You got an Item!",
-            $"The item \"{item.name}\" has been added your inventory",
+            $"The item \"{item.DisplayName}\" has been added your inventory",
             item.Sprite);
     }
 
