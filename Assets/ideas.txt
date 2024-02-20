@@ -1,0 +1,14 @@
+They have 5 days to travel the distance.
+
+Progress Tracker:
+Everytime the player moves the screen goes dark and it tells them in km how much further to olympus
+
+Random Encounters:
+Some encounters will happen on the path (Enemies, travelers, gods in disguise)
+Others will happen off trail, the player will choose to divert
+
+Villages:
+Players can buy food, sell goods, or buy a bed for rest
+
+Gods:
+Players can earn favours from gods, in the form of instant rest, food, money and stat buffs. If they piss them off, they can have negative effects
