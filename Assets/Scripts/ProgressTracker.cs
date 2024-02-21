@@ -23,13 +23,14 @@ public class ProgressTracker : MonoBehaviour
 
     [Space]
     [SerializeField] private int totalKM = 0;
-    [SerializeField] private int KMRemaining = 0;
+    [SerializeField] private int kilometersRemaining = 0;
     [SerializeField] private int currentMapPoint = 0;
     
     [Header("Existing")]
     [SerializeField] private float tirednessPerTick = 0.001f;
     [SerializeField] private float hungerPerTick = 0.01f;
     [SerializeField] private float timeToFullyRest = 0.25f;
+    [SerializeField] private Sprite restImage;
 
     [Header("Foraging")]
     [SerializeField] private int maxItemsPerForage = 4;
@@ -38,11 +39,13 @@ public class ProgressTracker : MonoBehaviour
     [SerializeField] private float timePerForage = 0.14f;
 
     [Header("Traveling")]
+    [SerializeField] private TravelUI travelUI;
     [SerializeField] private float tirednessPerTravel = 0.1f;
     [SerializeField] private float hungerPerForage = 0.15f;
 
     [Space]
-
+    [Header("UI")]
+    [SerializeField] private TMP_Text sceneDescription;
     [Header("Buttons")]
     [SerializeField] private Button continueTravelButton;
     private TMP_Text travelButtonText;
@@ -61,6 +64,7 @@ public class ProgressTracker : MonoBehaviour
             return staticUITime;
         }
     }
+    public int KilometersRemaining => kilometersRemaining;
 
     private void Awake()
     {
@@ -100,7 +104,7 @@ public class ProgressTracker : MonoBehaviour
     {
         mapPoints.AddRange(points);
         totalKM = mapPoints.Count * 10;
-        KMRemaining = totalKM;
+        kilometersRemaining = totalKM;
     }
     private void Travel()
     {
@@ -115,15 +119,13 @@ public class ProgressTracker : MonoBehaviour
             return;
         }
 
-        MovePlayer(PlayerStats.Speed);
+        travelUI.Travel(10, MovePlayer);
     }
-    public void MovePlayer(int speed, bool forward = true)
+    public void MovePlayer(int finalDistance) => MovePlayer(finalDistance, true);
+    public void MovePlayer(int finalDistance, bool forward)
     {
-        float hoursPassed = 10f / speed;
-        dayNightCycle.AddTime(Mathf.RoundToInt(hoursPassed * 60f));
-
         int mod = forward ? 1 : -1;
-        KMRemaining = KMRemaining + (10 * -mod);
+        kilometersRemaining = kilometersRemaining + (10 * -mod);
         currentMapPoint = currentMapPoint + mod;
 
         bool isLastPoint = false;
@@ -134,7 +136,7 @@ public class ProgressTracker : MonoBehaviour
             currentMapPoint = mapPoints.Count - 1;
             isLastPoint = true;
         }
-        if (KMRemaining > totalKM) { KMRemaining = totalKM; }
+        if (kilometersRemaining > totalKM) { kilometersRemaining = totalKM; }
 
         PlayerStats.Hunger -= hungerPerTravel;
         PlayerStats.Rest -= tirednessPerTravel;
@@ -144,6 +146,8 @@ public class ProgressTracker : MonoBehaviour
         {
             cam.LookAt(mapPoints[currentMapPoint + 1]);
         }
+
+        sceneDescription.text = CurrentPoint.GetDescription();
 
         MapGenerator.Instance.GenerateEnvironment();
     }
@@ -191,17 +195,11 @@ public class ProgressTracker : MonoBehaviour
         }
 
         Debug.Log($"Items Found: {numItemsFound}");
-        Dictionary<Item.Type, float> mods = new Dictionary<Item.Type, float>()
+        Dictionary<System.Type, float> mods = new Dictionary<System.Type, float>()
         {
-            {Item.Type.Boots, CurrentPoint.TerrainInfo.EquipmentChance },
-            {Item.Type.Armor, CurrentPoint.TerrainInfo.EquipmentChance },
-            {Item.Type.Shield, CurrentPoint.TerrainInfo.EquipmentChance },
-            {Item.Type.Weapon, CurrentPoint.TerrainInfo.EquipmentChance },
-            {Item.Type.Helmet, CurrentPoint.TerrainInfo.EquipmentChance },
-            
-            {Item.Type.Eadible, CurrentPoint.TerrainInfo.HuntingChance },
-            {Item.Type.Junk, CurrentPoint.TerrainInfo.ForagingChance },
-            {Item.Type.Book, CurrentPoint.TerrainInfo.ForagingChance }
+            {typeof(CombatItem), CurrentPoint.TerrainInfo.EquipmentChance },            
+            {typeof(FoodItem), CurrentPoint.TerrainInfo.HuntingChance },
+            {typeof(Item), CurrentPoint.TerrainInfo.ForagingChance },
         };
 
         for (int k = 0; k < numItemsFound; k++)
@@ -212,7 +210,22 @@ public class ProgressTracker : MonoBehaviour
     }
     public void Rest()
     {
-        dayNightCycle.AddTime(Mathf.RoundToInt(DayNightCycle.TOTAL_MINUTES * (timeToFullyRest * (1f - PlayerStats.Rest))));
-        PlayerStats.Rest = 1f;
+        int minutesToFullyRest = Mathf.RoundToInt(DayNightCycle.TOTAL_MINUTES * (timeToFullyRest * (1f - PlayerStats.Rest)));
+        float hoursRest = PlayerStats.Rest + 0.17f;
+
+        ModalController.OpenModal(
+            "You setup camp",
+            "How long do you rest for?",
+            restImage,
+            $"Rest for {((float)minutesToFullyRest / 60f).ToString("0.##")} Hours",
+            new System.Action(() => RestForTime(minutesToFullyRest, 1f)),
+            "Rest for an Hour",
+            new System.Action(() => RestForTime(60, hoursRest))
+            );
+    }
+    private void RestForTime(int time, float restValue)
+    {
+        dayNightCycle.AddTime(time);
+        PlayerStats.Rest = restValue;
     }
 }

@@ -22,7 +22,7 @@ public class InventoryManager : MonoBehaviour
 
     [Space]
     [SerializeField] private List<Item> equippedItems = new List<Item>();
-    Dictionary<Item.Type, ItemUI> equippedUIs = new Dictionary<Item.Type, ItemUI>();
+    Dictionary<CombatItem.EquipableType, ItemUI> equippedUIs = new Dictionary<CombatItem.EquipableType, ItemUI>();
 
     private List<ItemUI> uiItems = new List<ItemUI>();
 
@@ -44,11 +44,11 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        equippedUIs.Add(Item.Type.Weapon, null);
-        equippedUIs.Add(Item.Type.Armor, null);
-        equippedUIs.Add(Item.Type.Shield, null);
-        equippedUIs.Add(Item.Type.Boots, null);
-        equippedUIs.Add(Item.Type.Helmet, null);
+        equippedUIs.Add(CombatItem.EquipableType.Weapon, null);
+        equippedUIs.Add(CombatItem.EquipableType.Armor, null);
+        equippedUIs.Add(CombatItem.EquipableType.Shield, null);
+        equippedUIs.Add(CombatItem.EquipableType.Boots, null);
+        equippedUIs.Add(CombatItem.EquipableType.Helmet, null);
     }
 
     private void OnClick()
@@ -101,10 +101,7 @@ public class InventoryManager : MonoBehaviour
         CreateItemUI(item);
         inventory.AddItem(item);
 
-        if (item.ItemType == Item.Type.Book)
-        {
-            stats.Knowledge += item.KnowledgeBonus;
-        }
+        stats.Knowledge += item.KnowledgeBonus;
 
         if (showModal) OpenNewItemModal(item);
     }
@@ -112,15 +109,12 @@ public class InventoryManager : MonoBehaviour
     {
         stats.Money += cost;
 
-        if (item.ItemType == Item.Type.Book)
-        {
-            stats.Knowledge -= item.KnowledgeBonus;
-        }
+        stats.Knowledge -= item.KnowledgeBonus;
 
         DestroyItemUI(item);
         inventory.RemoveItem(item);
     }
-    public void EquipDequip(Item item, bool equiping, ItemUI ui = null)
+    public void EquipDequip(CombatItem item, bool equiping, ItemUI ui = null)
     {        
         int mod = equiping ? 1 : -1;
         if (ui == null)
@@ -143,45 +137,32 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        switch (item.ItemType)
+        if (equiping)
         {
-            case Item.Type.Helmet:
-            case Item.Type.Boots:
-            case Item.Type.Weapon:
-            case Item.Type.Armor:
-            case Item.Type.Shield:
+            equippedUIs[item.EquipType]?.MarkDequipped();
 
-                if (equiping)
-                {
-                    equippedUIs[item.ItemType]?.MarkDequipped();
+            equippedItems.Remove(item);
+            equippedItems.Add(item);
 
-                    equippedItems.Remove(item);
-                    equippedItems.Add(item);
-
-                    ui.MarkEquiped();
-                    equippedUIs[item.ItemType] = ui;
-                }
-                else if (equippedUIs[item.ItemType] == ui)
-                {
-                    ItemUI oldUI = equippedUIs[item.ItemType];
-                    if (oldUI)
-                    {
-                        equippedItems.Remove(oldUI.Item);
-                        oldUI.MarkDequipped();
-                    }
-                    equippedUIs[item.ItemType] = ui;
-                }
-                break;
-            default:
-                Debug.LogError($"Item in the wrong category got to the equip function. Aborting.\nItem: {item.name}. Category: {item.ItemType}");
-                return;
+            ui.MarkEquiped();
+            equippedUIs[item.EquipType] = ui;
+        }
+        else if (equippedUIs[item.EquipType] == ui)
+        {
+            ItemUI oldUI = equippedUIs[item.EquipType];
+            if (oldUI)
+            {
+                equippedItems.Remove(oldUI.Item);
+                oldUI.MarkDequipped();
+            }
+            equippedUIs[item.EquipType] = ui;
         }
 
-        stats.Attack += item.AttackBonus * mod;
-        stats.Defense += item.DefenseBonus * mod;
-        stats.Speed += item.SpeedBonus * mod;
+        stats.Attack += item.AttackBoost * mod;
+        stats.Defense += item.DefenseBoost * mod;
+        stats.Speed += item.SpeedBoost * mod;
     }
-    public void EatItem(Item item, ItemUI ui)
+    public void EatItem(FoodItem item, ItemUI ui)
     {
         stats.Hunger += item.HungerGain;
         DestroyItemUI(ui);

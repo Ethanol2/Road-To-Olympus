@@ -111,6 +111,34 @@ public class DayNightCycle : MonoBehaviour
         UpdateLuminosity();
         UpdateSunAndMoon(timePercent * TOTAL_SECONDS);
     }
+    public void LerpTime(int minutesToLerp, float lerpTime = 1f)
+    {
+        StartCoroutine(_LerpTime(minutesToLerp, lerpTime));
+    }
+    private IEnumerator _LerpTime(int minutesToLerp, float lerpTime)
+    {
+        bool timeUpdateCache = TimeRunsOnUpdate;
+
+        float timePerMinute = lerpTime / (float)minutesToLerp;
+        float timeToMinute = timePerMinute;
+        int minutesAdded = 0;
+
+        while (minutesAdded < minutesToLerp)
+        {
+            timeToMinute -= Time.deltaTime;
+            if (timeToMinute <= 0f)
+            {
+                timeToMinute = timePerMinute;
+                minutesAdded++;
+                AddTime(1);
+            }
+            UpdateSunAndMoon();
+
+            yield return null;
+        }
+
+        TimeRunsOnUpdate = timeUpdateCache;
+    }
     [ContextMenu("Set to Noon")]
     public void SetToNoon()
     {

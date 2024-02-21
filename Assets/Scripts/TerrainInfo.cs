@@ -15,6 +15,7 @@ public class TerrainInfo : MonoBehaviour
     [SerializeField] private Vector2Int rockCount = new Vector2Int(5, 50);
 
     [Header("Encounter Settings")]
+    [SerializeField, Range(0f, 2f)] private float generalForagingChance = 1f;
     [SerializeField, Range(0f, 2f)] private float eadibleChance = 1f;
     [SerializeField, Range(0f, 2f)] private float junkChance = 1f;
     [SerializeField, Range(0f, 2f)] private float equipmentChance = 1f;
@@ -30,6 +31,7 @@ public class TerrainInfo : MonoBehaviour
     public float ForagingChance => junkChance;
     public float HuntingChance => eadibleChance;
     public float EquipmentChance => equipmentChance;
+    public float GeneralForagingChance => generalForagingChance;
     public float VillageChance => villageChance;
 
     public void PopulateMap(bool flipped)
@@ -55,6 +57,7 @@ public class TerrainInfo : MonoBehaviour
         foreach(MapPoint point in  points)
         {
             point.TerrainInfo = this;
+            point.ForagingChance = generalForagingChance;
         }
     }
 }

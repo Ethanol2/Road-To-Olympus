@@ -14,11 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Junk
   sprite: {fileID: 2124866486, guid: 74777b41efa5adc47b93ae4eb85c47ba, type: 3}
-  spawnChance: 1.0516632
-  itemType: 6
-  hungerGain: 0
-  attackBonus: 0
-  defenseBonus: 0
-  speedBonus: 0
+  spawnChance: 0.6
   knowledgeBonus: 0
   moneyValue: 2

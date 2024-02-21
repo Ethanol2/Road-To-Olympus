@@ -51,10 +51,15 @@ public class PlayerStats : ScriptableObject
     {
         get => rest; set
         {
-            rest = value; if (rest <= 0)
+            rest = value; 
+            if (rest <= 0)
             {
                 rest = 0;
                 OnMaxTired.Invoke();
+            }
+            else if (rest > 1f)
+            {
+                rest = 1f;
             }
             OnStatsChanged.Invoke();
         }
@@ -70,7 +75,7 @@ public class PlayerStats : ScriptableObject
         }
     }
 
-    [SerializeField] public int speed = 10;
+    [SerializeField] private int speed = 10;
     public int Speed
     {
         get => speed; set

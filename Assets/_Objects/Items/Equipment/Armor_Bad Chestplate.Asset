@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87b9c6fecea06844c9f9592ff28b6929, type: 3}
+  m_Name: Armor_Bad Chestplate
+  m_EditorClassIdentifier: 
+  displayName: Bad Chestplate
+  sprite: {fileID: -412487864, guid: 74777b41efa5adc47b93ae4eb85c47ba, type: 3}
+  spawnChance: 0.05
+  itemType: 6
+  foodThing: 0.2
+  attackBonus: 1
+  defenseBonus: 1
+  speedBonus: 1
+  knowledgeBonus: 0
+  moneyValue: 10
+  equipType: 1
+  attackBoost: 0
+  defenseBoost: 10
+  speedBoost: 0

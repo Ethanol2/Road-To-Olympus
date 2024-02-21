@@ -9,15 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b92833c622a09c4bb0cec53f79d5a50, type: 3}
+  m_Script: {fileID: 11500000, guid: 638856cef4b99b346884fbb2cbb7bf95, type: 3}
   m_Name: Cucumber
   m_EditorClassIdentifier: 
+  displayName: Cucumber
   sprite: {fileID: -924404395, guid: 74777b41efa5adc47b93ae4eb85c47ba, type: 3}
   spawnChance: 0.4
-  itemType: 0
-  hungerGain: 0.2
-  attackBonus: 0
-  defenseBonus: 0
-  speedBonus: 0
+  itemType: 6
+  foodThing: 0.2
+  attackBonus: 1
+  defenseBonus: 1
+  speedBonus: 1
   knowledgeBonus: 0
   moneyValue: 2
+  hungerGain: 0.2
