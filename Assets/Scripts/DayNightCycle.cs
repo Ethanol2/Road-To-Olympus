@@ -95,7 +95,7 @@ public class DayNightCycle : MonoBehaviour
         if (time > TOTAL_MINUTES)
         {
             day++;
-            time = 0;
+            time = time - TOTAL_MINUTES;
         }
         UpdateClock();
         UpdateLuminosity();
@@ -142,23 +142,23 @@ public class DayNightCycle : MonoBehaviour
     [ContextMenu("Set to Noon")]
     public void SetToNoon()
     {
-        SetTime(TOTAL_MINUTES / 2, 0);
+        SetTime(TOTAL_MINUTES / 2, day);
     }
 
     [ContextMenu("Set to Midnight")]
     public void SetToMidnight()
     {
-        SetTime(0, 0);
+        SetTime(0, day);
     }
     [ContextMenu("Set to Sunrise")]
     public void SetToSunrise()
     {
-        SetTime(TOTAL_MINUTES / 4, 0);
+        SetTime(TOTAL_MINUTES / 4, day);
     }
     [ContextMenu("Set to Sundown")]
     public void SetToSundown()
     {
-        SetTime((TOTAL_MINUTES / 4) * 3, 0);
+        SetTime((TOTAL_MINUTES / 4) * 3, day);
     }
     private void UpdateSunAndMoon(float realSeconds)
     {

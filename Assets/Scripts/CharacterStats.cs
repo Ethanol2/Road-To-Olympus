@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "Player Stats")]
-public class PlayerStats : ScriptableObject
+public class CharacterStats : ScriptableObject
 {
     [SerializeField] private int health = 0;
     public int Health
@@ -141,7 +141,7 @@ public class PlayerStats : ScriptableObject
 
 public static class RandomExtensions
 {
-    public static void ApplyStats(this PlayerStats mine, PlayerStats other)
+    public static void ApplyStats(this CharacterStats mine, CharacterStats other)
     {
         mine.Attack = other.Attack;
         mine.Defense = other.Defense;

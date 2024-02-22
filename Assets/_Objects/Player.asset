@@ -9,14 +9,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b432ed562462290418cbac9252ef73a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f4c48fc7ae6e8f46ac91c4ac6043083, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  Health: 10
-  Money: 5
-  Hunger: 1
-  Rest: 1
-  Knowledge: 2
-  Speed: 10
-  Attack: 1
-  Defense: 0
+  health: 10
+  money: 5
+  hunger: 0.42000014
+  rest: 0.18500005
+  knowledge: 1
+  speed: 12
+  attack: 1
+  defense: 3
+  OnStatsChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnNoHealth:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEmptyStomach:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMaxTired:
+    m_PersistentCalls:
+      m_Calls: []

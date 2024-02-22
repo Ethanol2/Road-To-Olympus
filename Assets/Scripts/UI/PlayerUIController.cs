@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerUIController : MonoBehaviour
 {
-    [SerializeField] private PlayerStats stats;
+    [SerializeField] private CharacterStats stats;
 
     [Header("Stat UI")]
     [SerializeField] private UIProgressBar healthBar;

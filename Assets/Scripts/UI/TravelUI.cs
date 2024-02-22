@@ -10,7 +10,7 @@ public class TravelUI : MonoBehaviour
     [SerializeField] private float timeToTravel = 5f;
 
     [Header("References")]
-    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private CharacterStats playerStats;
     [SerializeField] private Transform travelUI;
     [SerializeField] private TMP_Text headerText;
     [SerializeField] private TMP_Text kmsText;
@@ -91,9 +91,11 @@ public class TravelUI : MonoBehaviour
             kmsText.text = $"{distanceTravelled} KM";
         }
 
-        yield return new WaitForSeconds(0.2f);
-
+        yield return new WaitForSeconds(dramaTime);
+        kmRemainingText.gameObject.SetActive(true);
         kmsText.text = $"You travelled {distanceTravelled} KM in {minutesPassed} minutes";
+
+        yield return new WaitForSeconds(dramaTime);
         kmRemainingText.text = $"{ProgressTracker.Instance.KilometersRemaining - distanceTravelled} KM remaining";
 
         yield return new WaitForSeconds(0.2f);

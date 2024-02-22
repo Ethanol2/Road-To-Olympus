@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +9,9 @@ public class InventoryManager : MonoBehaviour
     public static InventoryManager Instance;
 
     [SerializeField] private PlayerInventory inventory;
-    [SerializeField] private PlayerStats stats;
+    [SerializeField] private CharacterStats stats;
     [SerializeField] private GameObject inventoryScreen;
     [SerializeField] private Button inventoryButton;
-
-    [Space]
-    [SerializeField] private ItemUI inventoryItemPrefab;
-    [SerializeField] private Transform itemList;
 
     [Space]
     [SerializeField] private bool addStartItems = true;
@@ -24,18 +21,49 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private List<Item> equippedItems = new List<Item>();
     Dictionary<CombatItem.EquipableType, ItemUI> equippedUIs = new Dictionary<CombatItem.EquipableType, ItemUI>();
 
-    private List<ItemUI> uiItems = new List<ItemUI>();
+    [Header("UI")]
+    [SerializeField] private int currentInventoryCategory = 4;
+    [SerializeField] private ItemUI inventoryItemPrefab;
+    [SerializeField] private Transform itemList;
+
+    [Space]
+    [SerializeField] private Button foodCatButton;
+    [SerializeField] private Button equipmentCatButton;
+    [SerializeField] private Button bookCatButton;
+    [SerializeField] private Button junkCatButton;
+    [SerializeField] private Button allCatButton;
+
+    private List<ItemUI> uiItems = new List<ItemUI>(); 
+    private List<ItemUI>[] uiItemCategories = new List<ItemUI>[4];
 
     private void Awake()
     {
         Instance = this;
+
+        inventoryScreen.SetActive(false);
+        inventoryButton.onClick.AddListener(OnInventoryButtonClick);
+
+        equippedUIs.Add(CombatItem.EquipableType.Weapon, null);
+        equippedUIs.Add(CombatItem.EquipableType.Armor, null);
+        equippedUIs.Add(CombatItem.EquipableType.Shield, null);
+        equippedUIs.Add(CombatItem.EquipableType.Boots, null);
+        equippedUIs.Add(CombatItem.EquipableType.Helmet, null);
+
+        for (int k = 0; k < uiItemCategories.Length; k++)
+        {
+            uiItemCategories[k] = new List<ItemUI>();
+        }
+
+        foodCatButton.onClick.AddListener(() => DisplayCategory(0));
+        equipmentCatButton.onClick.AddListener(() => DisplayCategory(1));
+        bookCatButton.onClick.AddListener(() => DisplayCategory(2));
+        junkCatButton.onClick.AddListener(() => DisplayCategory(3));
+        allCatButton.onClick.AddListener(() => DisplayCategory(4));
     }
+    
     // Start is called before the first frame update
     void Start()
     {
-        inventoryScreen.SetActive(false);
-        inventoryButton.onClick.AddListener(OnClick);
-
         if (addStartItems)
         {
             foreach (Item item in startItems)
@@ -43,17 +71,12 @@ public class InventoryManager : MonoBehaviour
                 Add(item, 0, false);
             }
         }
-
-        equippedUIs.Add(CombatItem.EquipableType.Weapon, null);
-        equippedUIs.Add(CombatItem.EquipableType.Armor, null);
-        equippedUIs.Add(CombatItem.EquipableType.Shield, null);
-        equippedUIs.Add(CombatItem.EquipableType.Boots, null);
-        equippedUIs.Add(CombatItem.EquipableType.Helmet, null);
     }
 
-    private void OnClick()
+    private void OnInventoryButtonClick()
     {
         inventoryScreen.SetActive(!inventoryScreen.activeInHierarchy);
+        DisplayCategory(currentInventoryCategory);
     }
     private void CreateItemUI(Item item)
     {
@@ -62,6 +85,7 @@ public class InventoryManager : MonoBehaviour
         ui.Init(this);
         ui.AddItem(item);
         uiItems.Add(ui);
+        AddUIToCategory(ui);
     }
     private void DestroyItemUI(Item item)
     {
@@ -73,6 +97,7 @@ public class InventoryManager : MonoBehaviour
         if (!ui) { return; }
 
         uiItems.Remove(ui);
+        RemoveUIFromCategory(ui);
         Destroy(ui.gameObject);
         return;
     }
@@ -93,6 +118,60 @@ public class InventoryManager : MonoBehaviour
             $"You got an Item!",
             $"The item \"{item.DisplayName}\" has been added your inventory",
             item.Sprite);
+    }
+    private int GetUICategoryIndex(Item item)
+    {
+        int index = -1;
+
+        if (item is FoodItem)
+        {
+            index = 0;
+        }
+        else if (item is CombatItem)
+        {
+            index = 1;
+        }
+        else if (item.KnowledgeBonus > 0)
+        {
+            index = 2;
+        }
+        else
+        {
+            index = 3;
+        }
+
+        return index;
+    }
+    private void AddUIToCategory(ItemUI ui, int index = -1)
+    {
+        if (index == -1) index = GetUICategoryIndex(ui.Item);
+        uiItemCategories[index].Add(ui);
+    }
+    private void RemoveUIFromCategory(ItemUI ui, int index = -1)
+    {
+        if (index == -1) index = GetUICategoryIndex(ui.Item);
+        uiItemCategories[index].Remove(ui);
+    }
+    private void DisplayCategory(int index)
+    {
+        List<ItemUI> _uiItems;
+        if (index == 4) 
+        { _uiItems = uiItems; }
+        else
+        {
+            foreach (ItemUI uiItem in uiItems)
+            {
+                uiItem.gameObject.SetActive(false);
+            }
+            _uiItems = uiItemCategories[index]; 
+        }
+
+        foreach (ItemUI uiItem in _uiItems)
+        {
+            uiItem.gameObject.SetActive(true);
+        }
+
+        currentInventoryCategory = index;
     }
 
     public void Add(Item item, int cost, bool showModal = true)

@@ -9,9 +9,9 @@ public class ProgressTracker : MonoBehaviour
     public static ProgressTracker Instance;
     private static float staticUITime = 0.5f;
 
-    public PlayerStats PlayerStats;
+    public CharacterStats PlayerStats;
     public PlayerInventory Inventory;
-    [SerializeField] private PlayerStats startStats;
+    [SerializeField] private CharacterStats startStats;
 
     [Space]
     [SerializeField] private float uiTime = 0.5f;
@@ -29,7 +29,10 @@ public class ProgressTracker : MonoBehaviour
     [Header("Existing")]
     [SerializeField] private float tirednessPerTick = 0.001f;
     [SerializeField] private float hungerPerTick = 0.01f;
+
+    [Header("Resting")]
     [SerializeField] private float timeToFullyRest = 0.25f;
+    [SerializeField] private float hungerRestMod = 0.5f;
     [SerializeField] private Sprite restImage;
 
     [Header("Foraging")]
@@ -226,6 +229,7 @@ public class ProgressTracker : MonoBehaviour
     private void RestForTime(int time, float restValue)
     {
         dayNightCycle.AddTime(time);
+        PlayerStats.Hunger -= time * hungerPerTick * hungerRestMod;
         PlayerStats.Rest = restValue;
     }
 }
