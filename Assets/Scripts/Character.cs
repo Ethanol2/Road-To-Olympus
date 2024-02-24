@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-[CreateAssetMenu(menuName = "Character")]
+[CreateAssetMenu(menuName = "Character/Character")]
 public class Character : ScriptableObject
 {
     [SerializeField] private string displayName = "Unknown Stranger";
@@ -16,7 +20,9 @@ public class Character : ScriptableObject
 
     [SerializeField] private string personalPronoun = "They";
     public string PersonalPronoun => personalPronoun;
-
+    [SerializeField] private TerrainInfo[] favouriteAreas = new TerrainInfo[0];
+    [SerializeField, Range(0f, 2f)] private float spawnChance = 1f;
+    [SerializeField] private bool uniqueEncounter = false;
 
     [Header("-1 is hostile, 0 is neutral, 1 is friendly")]
     [SerializeField] private float startingRelashionship = 0f;
@@ -41,6 +47,8 @@ public class Character : ScriptableObject
     public CombatItem Weapon => weapon;
     [SerializeField] private CombatItem rangedWeapon;
     public CombatItem RangedWeapon => rangedWeapon;
+    [SerializeField] private Attack[] meleeAttacks = new Attack[0];
+    public Attack[] MeleeAttacks => meleeAttacks;
 
     [Space]
     [SerializeField] private List<Item> inventory = new List<Item>();
@@ -77,4 +85,60 @@ public class Character : ScriptableObject
     {
         Friendly, Familiar, Neutral, Cool, Hostile, Unkown
     }
+
+    private void OnValidate()
+    {
+        if (rangedWeapon && rangedWeapon.EquipType != CombatItem.EquipableType.RangeWeapon) { rangedWeapon = null; }
+        if (weapon && weapon.EquipType != CombatItem.EquipableType.Weapon) { weapon = null; }
+        if (armour && armour.EquipType != CombatItem.EquipableType.Armour) { armour = null; }
+        if (helmet && helmet.EquipType != CombatItem.EquipableType.Helmet) { helmet = null; }
+        if (shield && shield.EquipType != CombatItem.EquipableType.Shield) { shield = null; }
+        if (boots && boots.EquipType != CombatItem.EquipableType.Boots) { boots = null; }
+    }
+    
+    public float GetSpawnChance(TerrainInfo currentTerrain)
+    {
+        float mod = 1f;
+        if (favouriteAreas.Contains<TerrainInfo>(currentTerrain))
+        {
+            mod = 1.5f;
+        }
+
+        return spawnChance * mod;
+    }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(Character))]
+public class CharacterEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.DrawDefaultInspector();
+
+        GUILayout.Space(10f);
+        if (GUILayout.Button("Create Stats Object"))
+        {
+            CharacterStats stats = ScriptableObject.CreateInstance<CharacterStats>();
+            stats.name = target.name + "'s Stats";
+
+            AssetDatabase.AddObjectToAsset(stats, AssetDatabase.GetAssetPath(target));
+            serializedObject.FindProperty("stats").objectReferenceValue = stats;
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+        if (GUILayout.Button("Delete Stats Object"))
+        {
+            SerializedProperty statsProp = serializedObject.FindProperty("stats");
+            Undo.DestroyObjectImmediate(statsProp.objectReferenceValue);
+            statsProp.objectReferenceValue = null;
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+#endif

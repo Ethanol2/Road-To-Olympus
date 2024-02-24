@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Combat Item")]
+[CreateAssetMenu(menuName = "Item/Combat Item")]
 public class CombatItem : Item
 {
     [SerializeField] private EquipableType equipType;
@@ -27,8 +27,11 @@ public class CombatItem : Item
     [SerializeField] private List<Attack> attacks = new List<Attack>();
     public List<Attack> Attacks => attacks;
 
+    // IRandomizable
+    public override string RandomizableType => "CombatItem";
+
     public enum EquipableType
     {
-        Weapon, Armor, Boots, Helmet, Shield
+        Weapon, RangeWeapon, Armour, Boots, Helmet, Shield
     }
 }

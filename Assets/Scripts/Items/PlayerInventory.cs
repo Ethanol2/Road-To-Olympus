@@ -6,7 +6,7 @@ using UnityEditor;
 using System.Threading.Tasks;
 #endif
 
-[CreateAssetMenu(menuName ="Inventory")]
+[CreateAssetMenu(menuName = "Item/Inventory")]
 public class PlayerInventory : ScriptableObject
 {
     [SerializeField] private Item[] itemReferences = new Item[0];
@@ -55,52 +55,12 @@ public class PlayerInventory : ScriptableObject
 
     public Item GetRandom(float modifier = 1f)
     {
-        return GetRandom(ItemReferences, modifier);
+        return Randomizer.GetRandom(ItemReferences, modifier) as Item;
     }
     public Item GetRandomOfType<T>(float modifier = 1f) where T : Item 
     {
-        return GetRandom(GetItemsOfType<T>(), modifier);
-    }
-    
-    // Static
-
-    // Source: https://softwareengineering.stackexchange.com/a/150642
-    public static Item GetRandom(IEnumerable<Item> items, float modifier = 1f)
-    {
-        float totalWeight = 0f;
-        Item selected = default(Item);
-
-        foreach (Item i in items)
-        {
-            float weight = i.SpawnChance * modifier;
-
-            float r = Random.Range(0f, weight + totalWeight);
-            if (r >= totalWeight)
-            {
-                selected = i;
-            }
-            totalWeight += weight;
-        }
-        return selected;
-    }
-    public static Item GetRandom(IEnumerable<Item> items, Dictionary<System.Type, float> modifiersByType)
-    {
-        float totalWeight = 0f;
-        Item selected = default(Item);
-
-        foreach (Item i in items)
-        {
-            float weight = i.SpawnChance * modifiersByType[i.GetType()];
-
-            float r = Random.Range(0f, weight + totalWeight);
-            if (r >= totalWeight)
-            {
-                selected = i;
-            }
-            totalWeight += weight;
-        }
-        return selected;
-    }
+        return Randomizer.GetRandom(GetItemsOfType<T>(), modifier) as Item;
+    }    
 }
 #if UNITY_EDITOR
 [UnityEditor.CustomEditor(typeof(PlayerInventory))]

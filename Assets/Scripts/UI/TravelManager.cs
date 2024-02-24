@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TravelUI : MonoBehaviour
+public class TravelManager : MonoBehaviour
 {
     [Header("Values")]
     [SerializeField] private float timeToTravel = 5f;

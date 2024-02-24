@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 777a21cd5de70f14d92b483a2b0acc5d, type: 3}
+  m_Name: Wolf Attack
+  m_EditorClassIdentifier: 
+  displayName: Wolves attack...
+  description: 3 wolves come on to the path, staring you down. Their yellow eyes
+    flash as they size you up. You know there are likely more just outside your field
+    of view, waiting to attack.
+  encounterType: 0
+  encounterChance: 0.5
+  leader: {fileID: 11400000, guid: 8eb623f25bb6a21469ccc55f23615be2, type: 2}
+  minionTypes:
+  - {fileID: 11400000, guid: 8eb623f25bb6a21469ccc55f23615be2, type: 2}
+  evenDistribution: 1
+  minionCount: {x: 2, y: 5}
+  importantLeaderChance: 0.859
+  numbersHidden: 1

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Player Stats")]
+[CreateAssetMenu(menuName = "Character/Player Stats")]
 public class CharacterStats : ScriptableObject
 {
     [SerializeField] private int health = 0;
@@ -106,6 +106,7 @@ public class CharacterStats : ScriptableObject
         }
     }
 
+    [Space]
     public UnityEvent OnStatsChanged;
     public UnityEvent OnNoHealth;
     public UnityEvent OnEmptyStomach;

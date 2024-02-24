@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7666421891055857447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4c48fc7ae6e8f46ac91c4ac6043083, type: 3}
+  m_Name: Wolfs's Stats
+  m_EditorClassIdentifier: 
+  health: 5
+  money: 0
+  hunger: 0.5
+  rest: 1
+  knowledge: 1
+  speed: 20
+  attack: 4
+  defense: 1
+  OnStatsChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnNoHealth:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEmptyStomach:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMaxTired:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01ea72562b4488b48915aec111ab7c66, type: 3}
+  m_Name: Wolf
+  m_EditorClassIdentifier: 
+  displayName: Wolfs
+  description: Its eyes bore in to you, considering how best to take you down. Ears
+    up and twitching, as if waiting for a signal. The beast coat is tawny, with dark
+    grey on top and light grey bellow. It stands up to your waist.
+  possessivePronoun: Its
+  personalPronoun: It
+  favouriteAreas: []
+  spawnChance: 1.35
+  uniqueEncounter: 0
+  startingRelashionship: -1
+  image: {fileID: 0}
+  stats: {fileID: -7666421891055857447}
+  helmet: {fileID: 0}
+  armour: {fileID: 0}
+  shield: {fileID: 0}
+  boots: {fileID: 0}
+  weapon: {fileID: 0}
+  rangedWeapon: {fileID: 0}
+  meleeAttacks: []
+  inventory: []

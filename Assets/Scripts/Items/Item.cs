@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(menuName = "Item")]
-public class Item : ScriptableObject
+[CreateAssetMenu(menuName = "Item/Item")]
+public class Item : ScriptableObject, IRandomizable
 {
     [SerializeField] private string displayName;
     public string DisplayName => displayName;
@@ -20,6 +20,10 @@ public class Item : ScriptableObject
     [Space]
     [SerializeField] private int moneyValue = 1;
     public int MoneyValue => moneyValue;
+
+    public float Chance => spawnChance;
+
+    public virtual string RandomizableType => "Item";
 
     private void OnValidate()
     {

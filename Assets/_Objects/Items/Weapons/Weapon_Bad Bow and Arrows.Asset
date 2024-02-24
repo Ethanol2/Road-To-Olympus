@@ -15,14 +15,13 @@ MonoBehaviour:
   displayName: Bad Bow and Arrows
   sprite: {fileID: -882918338, guid: 74777b41efa5adc47b93ae4eb85c47ba, type: 3}
   spawnChance: 0.04
-  itemType: 6
-  foodThing: 0.2
-  attackBonus: 1
-  defenseBonus: 1
-  speedBonus: 1
   knowledgeBonus: 0
   moneyValue: 10
-  equipType: 0
+  equipType: 1
   attackBoost: 5
-  defenseBoost: 4
+  defenseBoost: 0
   speedBoost: 0
+  hitChanceBoost: 0
+  additionalHitDice: 0
+  hitRangeMultiplier: 1
+  attacks: []

@@ -33,6 +33,7 @@ public class ProgressTracker : MonoBehaviour
     [Header("Resting")]
     [SerializeField] private float timeToFullyRest = 0.25f;
     [SerializeField] private float hungerRestMod = 0.5f;
+    [SerializeField] private float hoursRestGain = 0.125f;
     [SerializeField] private Sprite restImage;
 
     [Header("Foraging")]
@@ -42,7 +43,7 @@ public class ProgressTracker : MonoBehaviour
     [SerializeField] private float timePerForage = 0.14f;
 
     [Header("Traveling")]
-    [SerializeField] private TravelUI travelUI;
+    [SerializeField] private TravelManager travelUI;
     [SerializeField] private float tirednessPerTravel = 0.1f;
     [SerializeField] private float hungerPerForage = 0.15f;
 
@@ -161,12 +162,13 @@ public class ProgressTracker : MonoBehaviour
             forageButtonText.text = "Too Hungry to Forage";
             return; 
         }
-        PlayerStats.Hunger -= hungerPerForage;
         if (PlayerStats.Rest < tirednessPerForage)
         {
             forageButtonText.text = "Too Tired to Forage";
             return;
         }
+
+        PlayerStats.Hunger -= hungerPerForage;
         PlayerStats.Rest -= tirednessPerForage;
 
         dayNightCycle.AddTime(Mathf.RoundToInt(DayNightCycle.TOTAL_MINUTES * timePerForage));
@@ -198,23 +200,46 @@ public class ProgressTracker : MonoBehaviour
         }
 
         Debug.Log($"Items Found: {numItemsFound}");
-        Dictionary<System.Type, float> mods = new Dictionary<System.Type, float>()
+        Dictionary<string, float> mods = new Dictionary<string, float>()
         {
-            {typeof(CombatItem), CurrentPoint.TerrainInfo.EquipmentChance },            
-            {typeof(FoodItem), CurrentPoint.TerrainInfo.HuntingChance },
-            {typeof(Item), CurrentPoint.TerrainInfo.ForagingChance },
+            {"CombatItem", CurrentPoint.TerrainInfo.EquipmentChance },            
+            {"FoodItem", CurrentPoint.TerrainInfo.HuntingChance },
+            {"Item", CurrentPoint.TerrainInfo.ForagingChance },
         };
 
         for (int k = 0; k < numItemsFound; k++)
         {
-            InventoryManager.Instance.Add(PlayerInventory.GetRandom(Inventory.ItemReferences, mods), 0);
+            InventoryManager.Instance.Add(Randomizer.GetRandom(Inventory.ItemReferences, mods) as Item, 0);
         }
 
     }
     public void Rest()
     {
         int minutesToFullyRest = Mathf.RoundToInt(DayNightCycle.TOTAL_MINUTES * (timeToFullyRest * (1f - PlayerStats.Rest)));
-        float hoursRest = PlayerStats.Rest + 0.17f;
+        float hoursRest = PlayerStats.Rest + hoursRestGain;
+
+        string restToTimeText;
+        float timeOfDayTarget;
+        if (DayNightCycle.DayPercentage < dayNightCycle.SunriseStart)
+        {
+            restToTimeText = "Rest to Dawn";
+            timeOfDayTarget = dayNightCycle.SunriseStart;
+        }
+        else if (DayNightCycle.DayPercentage < 0.5f)
+        {
+            restToTimeText = "Rest to Noon";
+            timeOfDayTarget = 0.5f;
+        }
+        else if (DayNightCycle.DayPercentage < dayNightCycle.SundownStart)
+        {
+            restToTimeText = "Rest to Dusk";
+            timeOfDayTarget = dayNightCycle.SundownStart;
+        }
+        else
+        {
+            restToTimeText = "Rest to Midnight";
+            timeOfDayTarget = 1f;
+        }
 
         ModalController.OpenModal(
             "You setup camp",
@@ -223,13 +248,70 @@ public class ProgressTracker : MonoBehaviour
             $"Rest for {((float)minutesToFullyRest / 60f).ToString("0.##")} Hours",
             new System.Action(() => RestForTime(minutesToFullyRest, 1f)),
             "Rest for an Hour",
-            new System.Action(() => RestForTime(60, hoursRest))
+            new System.Action(() => RestForTime(60, hoursRest)),
+            restToTimeText,
+            new System.Action(() => RestToTime(timeOfDayTarget))
             );
     }
     private void RestForTime(int time, float restValue)
     {
-        dayNightCycle.AddTime(time);
-        PlayerStats.Hunger -= time * hungerPerTick * hungerRestMod;
-        PlayerStats.Rest = restValue;
+        StartCoroutine(RestRoutine(time, restValue, time * hungerPerTick * hungerRestMod));
+    }
+    private void RestToTime(float percentageOfDay)
+    {
+        int targetTime = Mathf.RoundToInt(percentageOfDay * DayNightCycle.TOTAL_MINUTES);
+        if (targetTime < DayNightCycle.CurrentTime) { return; }
+
+        int timeChange = targetTime - DayNightCycle.CurrentTime;
+
+        StartCoroutine(RestRoutine(timeChange, (timeChange / 60f) * hoursRestGain, timeChange * hungerPerTick * hungerRestMod));
+    }
+    private IEnumerator RestRoutine(int minutes, float restToAdd, float hungerToRemove)
+    {
+        float totalTime = 5f;
+        float timePerMinute = totalTime / (float)minutes;
+        float restPerMinute = restToAdd / (float)minutes;
+        float hungerPerMinute = hungerToRemove / (float)minutes;
+
+        int minutesAdded = 0;
+        float timeToMinute = timePerMinute;
+
+        continueTravelButton.transform.parent.gameObject.SetActive(false);
+        dayNightCycle.TimeRunsOnUpdate = false;
+        cam.LerpToCamPosition(CurrentPoint, true);
+        yield return new WaitForSeconds(2f);
+
+        string description = sceneDescription.text;
+        sceneDescription.text = "You sit down next to the path and rest";
+
+        yield return null;
+        Time.timeScale = Mathf.Clamp((minutes * DayNightCycle.TickRate) / totalTime, 1f, 100f);
+        Debug.Log("[ProgressTracker] Increasing timescale");
+
+        while (minutesAdded < minutes)
+        {
+            timeToMinute -= Time.deltaTime;
+            if (timeToMinute <= 0f)
+            {
+                timeToMinute = timePerMinute;
+                minutesAdded++;
+                PlayerStats.Rest += restPerMinute;
+                PlayerStats.Hunger -= hungerPerMinute;
+                dayNightCycle.AddTime(1);
+            }
+
+            yield return null;
+        }
+
+        Time.timeScale = 1f;
+        Debug.Log("[ProgressTracker] Reseting timescale");
+        yield return null;
+
+        continueTravelButton.transform.parent.gameObject.SetActive(true);
+        dayNightCycle.TimeRunsOnUpdate = true;
+        cam.LerpToCamPosition(CurrentPoint, false);
+        yield return new WaitForSeconds(2f);
+
+        sceneDescription.text = description;
     }
 }

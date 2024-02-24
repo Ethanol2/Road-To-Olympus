@@ -151,4 +151,11 @@ public class SpriteGenerator : MonoBehaviour
 
         return boxCollider.transform.TransformPoint(point);
     }
+    public void SetSpriteColours(Color colour)
+    {
+        foreach (SpriteRenderer renderer in spriteRenderers)
+        {
+            renderer.color = colour;
+        }
+    }
 }

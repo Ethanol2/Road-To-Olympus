@@ -46,39 +46,6 @@ public class MapGenerator : MonoBehaviour
     {
         if (GenerateOnStart) Generate();
     }
-    public void Generate()
-    {
-        StartCoroutine(GenerateRoutine());
-    }
-    public void GenerateEnvironment()
-    {
-        Vector2Int rockSettings = Current.RockCount;
-        foreach (SpriteGenerator generator in rockGenerators)
-        {
-            generator.SetCam(cam.transform);
-            generator.Generate(rockSettings.x, rockSettings.y);
-        }
-
-        Vector2Int treeSettings = Current.TreesCount;
-        foreach (SpriteGenerator generator in treeGenerators)
-        {
-            generator.SetCam(cam.transform);
-            generator.Generate(treeSettings.x, treeSettings.y);
-        }
-
-        Vector2Int shrubSettings = Current.ShrubCount;
-        foreach (SpriteGenerator generator in shrubGenerators)
-        {
-            generator.SetCam(cam.transform);
-            generator.Generate(shrubSettings.x, shrubSettings.y);
-        }
-
-        foreach (SpriteGenerator generator in cloudGenerators)
-        {
-            generator.SetCam(cam.transform);
-            generator.Generate();
-        }
-    }
     private IEnumerator GenerateRoutine()
     {
         terrainCardOrder.Clear();
@@ -127,4 +94,51 @@ public class MapGenerator : MonoBehaviour
         olympus.localScale = Vector3.one * startScale;
         olympus.position = tPos * segmentsToGenerate;
     }
+    private void _SetSpriteColours(Color colour)
+    {
+        foreach (SpriteGenerator generator in cloudGenerators)
+            generator.SetSpriteColours(colour);
+        foreach (SpriteGenerator generator in treeGenerators)
+            generator.SetSpriteColours(colour);
+        foreach (SpriteGenerator generator in rockGenerators)
+            generator.SetSpriteColours(colour);
+        foreach (SpriteGenerator generator in shrubGenerators)
+            generator.SetSpriteColours(colour);
+    }
+
+    public void Generate()
+    {
+        StartCoroutine(GenerateRoutine());
+    }
+    public void GenerateEnvironment()
+    {
+        Vector2Int rockSettings = Current.RockCount;
+        foreach (SpriteGenerator generator in rockGenerators)
+        {
+            generator.SetCam(cam.transform);
+            generator.Generate(rockSettings.x, rockSettings.y);
+        }
+
+        Vector2Int treeSettings = Current.TreesCount;
+        foreach (SpriteGenerator generator in treeGenerators)
+        {
+            generator.SetCam(cam.transform);
+            generator.Generate(treeSettings.x, treeSettings.y);
+        }
+
+        Vector2Int shrubSettings = Current.ShrubCount;
+        foreach (SpriteGenerator generator in shrubGenerators)
+        {
+            generator.SetCam(cam.transform);
+            generator.Generate(shrubSettings.x, shrubSettings.y);
+        }
+
+        foreach (SpriteGenerator generator in cloudGenerators)
+        {
+            generator.SetCam(cam.transform);
+            generator.Generate();
+        }
+    }
+
+    public static void SetSpriteColours(Color colour) => Instance?._SetSpriteColours(colour);
 }

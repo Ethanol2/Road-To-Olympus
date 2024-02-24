@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,6 +8,8 @@ public class DayNightCycle : MonoBehaviour
 {
     public bool TimeRunsOnUpdate = true;
     public static DayNightCycle Instance { get; private set; }
+
+    [SerializeField] private float startTime = 0.5f;
 
     [Space]
     [SerializeField] private int day = 0;
@@ -30,21 +31,25 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private Color daySkyColour = Color.cyan;
     [SerializeField] private Color dayLightColour = Color.cyan;
     [SerializeField] private float dayStart = 0.3f;
+    public float DayStart => dayStart;
 
     [Header("Sundown")]
     [SerializeField] private Color sundownSkyColour = Color.red;
     [SerializeField] private Color sundownLightColour = Color.red;
     [SerializeField] private float sundownStart = 0.75f;
+    public float SundownStart => sundownStart;
 
     [Header("Night")]
     [SerializeField] private Color nightSkyColour = Color.black;
     [SerializeField] private Color nightLightColour = Color.black;
     [SerializeField] private float nightStart = 0.8f;
+    public float NightStart => nightStart;
 
     [Header("Sunrise")]
     [SerializeField] private Color sunriseSkyColour = Color.red;
     [SerializeField] private Color sunriseLightColour = Color.red;
     [SerializeField] private float sunriseStart = 0.25f;
+    public float SunriseStart => sunriseStart;
 
     private float timeToMinute = 0f;
     public const int TOTAL_MINUTES = 1440;
@@ -53,7 +58,19 @@ public class DayNightCycle : MonoBehaviour
 
     public Luminosity TimeOfDay => timeOfDay;
     public static float TickRate => Instance.tickRate;
+    public static int CurrentTime => Instance.time;
+
     public UnityEvent OnTick;
+
+    public static float DayPercentage
+    {
+        get
+        {
+            if (!Instance) return 0f;
+
+            return (float)Instance.time / (float)TOTAL_MINUTES;
+        }
+    }
 
     public enum Luminosity
     {
@@ -68,6 +85,7 @@ public class DayNightCycle : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        time = Mathf.RoundToInt(TOTAL_MINUTES * startTime);
         TOTAL_SECONDS = TOTAL_MINUTES * tickRate;
         timeToMinute = tickRate;
         UpdateSunAndMoon(time * tickRate);
@@ -207,7 +225,7 @@ public class DayNightCycle : MonoBehaviour
     {
         Luminosity oldTimeOfDay = timeOfDay;
 
-        float timePercent = (float)time / (float)TOTAL_MINUTES;
+        float timePercent = DayPercentage;
 
         if (timePercent > dayStart && timePercent < sundownStart)
         {
@@ -264,9 +282,10 @@ public class DayNightCycle : MonoBehaviour
     private void SetLightColour(Color colour)
     {
         sceneLight.color = colour;
+        MapGenerator.SetSpriteColours(colour);
     }
 
-    private IEnumerator LerpColour(Color start, Color target, Action<Color> SetColour)
+    private IEnumerator LerpColour(Color start, Color target, System.Action<Color> SetColour)
     {
         float t = 0f;
         while (t < 1f)

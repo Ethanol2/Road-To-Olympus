@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Attack")]
+[CreateAssetMenu(menuName = "Item/Attack")]
 public class Attack : ScriptableObject
 {
     [SerializeField] private string displayName = "Sword Swing";

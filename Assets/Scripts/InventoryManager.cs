@@ -18,7 +18,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Item[] startItems = new Item[0];
 
     [Space]
-    [SerializeField] private List<Item> equippedItems = new List<Item>();
+    [SerializeField] private List<CombatItem> equippedItems = new List<CombatItem>();
     Dictionary<CombatItem.EquipableType, ItemUI> equippedUIs = new Dictionary<CombatItem.EquipableType, ItemUI>();
 
     [Header("UI")]
@@ -44,7 +44,7 @@ public class InventoryManager : MonoBehaviour
         inventoryButton.onClick.AddListener(OnInventoryButtonClick);
 
         equippedUIs.Add(CombatItem.EquipableType.Weapon, null);
-        equippedUIs.Add(CombatItem.EquipableType.Armor, null);
+        equippedUIs.Add(CombatItem.EquipableType.Armour, null);
         equippedUIs.Add(CombatItem.EquipableType.Shield, null);
         equippedUIs.Add(CombatItem.EquipableType.Boots, null);
         equippedUIs.Add(CombatItem.EquipableType.Helmet, null);
@@ -195,7 +195,6 @@ public class InventoryManager : MonoBehaviour
     }
     public void EquipDequip(CombatItem item, bool equiping, ItemUI ui = null)
     {        
-        int mod = equiping ? 1 : -1;
         if (ui == null)
         {
             if (equiping)
@@ -231,12 +230,13 @@ public class InventoryManager : MonoBehaviour
             ItemUI oldUI = equippedUIs[item.EquipType];
             if (oldUI)
             {
-                equippedItems.Remove(oldUI.Item);
+                equippedItems.Remove(oldUI.Item as CombatItem);
                 oldUI.MarkDequipped();
             }
             equippedUIs[item.EquipType] = ui;
         }
 
+        int mod = equiping ? 1 : -1;
         stats.Attack += item.AttackBoost * mod;
         stats.Defense += item.DefenseBoost * mod;
         stats.Speed += item.SpeedBoost * mod;
