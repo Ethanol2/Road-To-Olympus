@@ -8,15 +8,19 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "Character/Player Stats")]
 public class CharacterStats : ScriptableObject
 {
-    [SerializeField] private int health = 0;
-    public int Health
+    [SerializeField] private float health = 1f;
+    public float Health
     {
         get => health; set
         {
-            health = value; if (health <= 0)
+            health = value; if (health <= 0f)
             {
-                health = 0;
+                health = 0f;
                 OnNoHealth.Invoke();
+            }
+            else if (health > 1f)
+            {
+                health = 1f;
             }
             OnStatsChanged.Invoke();
         }
@@ -41,6 +45,10 @@ public class CharacterStats : ScriptableObject
             {
                 hunger = 0;
                 OnEmptyStomach.Invoke();
+            }
+            else if (hunger > 1f)
+            {
+                hunger = 1f;
             }
             OnStatsChanged.Invoke();
         }
@@ -114,7 +122,7 @@ public class CharacterStats : ScriptableObject
 
     public void SaveValues()
     {
-        PlayerPrefs.SetInt("Health", Health);
+        PlayerPrefs.SetFloat("Health", Health);
         PlayerPrefs.SetInt("Money", Money);
         PlayerPrefs.SetFloat("Hunger", Hunger);
         PlayerPrefs.SetFloat("Rest", Rest);

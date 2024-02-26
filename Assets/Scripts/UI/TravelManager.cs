@@ -22,13 +22,14 @@ public class TravelManager : MonoBehaviour
         continueButton.onClick.AddListener(CloseWindow);
         travelUI.gameObject.SetActive(false);
     }
-    public void Travel(int targetDistance, System.Action<int> onTravelStop)
+    public void Travel(Milestone[] milestones, System.Action<int> onTravelStop)
     {
-        StartCoroutine(TravelRoutine(targetDistance, onTravelStop));
+        StartCoroutine(TravelRoutine(milestones, onTravelStop));
     }
-    private IEnumerator TravelRoutine(int targetDistance, System.Action<int> onTravelStop)
+    private IEnumerator TravelRoutine(Milestone[] milestones, System.Action<int> onTravelStop)
     {
         DayNightCycle.Instance.TimeRunsOnUpdate = false;
+        int targetDistance = milestones.Length;
 
         travelUI.gameObject.SetActive(true);
         headerText.gameObject.SetActive(false);
@@ -77,18 +78,17 @@ public class TravelManager : MonoBehaviour
                 yield return new WaitForSeconds(timePerKM / 4f);
                 headerText.text += ".";
                 periodCount++;
-            }
-            if (Input.GetMouseButtonDown(0)) 
-            { 
-                distanceTravelled = targetDistance;
-                kmsText.text = $"{distanceTravelled} KM";
-                Debug.Log("fuck");
-                yield return new WaitForSeconds(dramaTime);
-                break;
-            }
+            }            
 
             distanceTravelled++;
             kmsText.text = $"{distanceTravelled} KM";
+            
+            if (EncounterManager.Instance.CheckForEncounter(milestones[distanceTravelled - 1]))
+            {
+                CloseWindow();
+                onTravelStop(distanceTravelled);
+                yield break;
+            }
         }
 
         yield return new WaitForSeconds(dramaTime);

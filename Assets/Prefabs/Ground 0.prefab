@@ -42,12 +42,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3273579906722132340}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827be0b14588c714cb46039b813fa991, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c63252c23444b64c943fef15f49f82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 0.5
+  ForagingChance: 1
   ForagingModifier: 1
 --- !u!1 &4185264961764476776
 GameObject:
@@ -91,12 +91,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4185264961764476776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827be0b14588c714cb46039b813fa991, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c63252c23444b64c943fef15f49f82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 0.5
+  ForagingChance: 1
   ForagingModifier: 1
 --- !u!1 &4456699272480394696
 GameObject:
@@ -290,6 +290,7 @@ MonoBehaviour:
   treesCount: {x: 60, y: 100}
   shrubCount: {x: 150, y: 200}
   rockCount: {x: 5, y: 50}
+  generalForagingChance: 1
   eadibleChance: 1.32
   junkChance: 1.5
   equipmentChance: 0.72
@@ -336,12 +337,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6403240885411191516}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827be0b14588c714cb46039b813fa991, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c63252c23444b64c943fef15f49f82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 0.5
+  ForagingChance: 1
   ForagingModifier: 1
 --- !u!1 &6484933550058642093
 GameObject:
@@ -385,12 +386,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6484933550058642093}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827be0b14588c714cb46039b813fa991, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c63252c23444b64c943fef15f49f82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 0.5
+  ForagingChance: 1
   ForagingModifier: 1
 --- !u!1 &6664931963927984530
 GameObject:
@@ -434,12 +435,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6664931963927984530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827be0b14588c714cb46039b813fa991, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c63252c23444b64c943fef15f49f82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 0.5
+  ForagingChance: 1
   ForagingModifier: 1
 --- !u!1 &8028803182297000027
 GameObject:
@@ -483,12 +484,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8028803182297000027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827be0b14588c714cb46039b813fa991, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c63252c23444b64c943fef15f49f82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 0.5
+  ForagingChance: 1
   ForagingModifier: 1
 --- !u!1001 &1302947202858630121
 PrefabInstance:

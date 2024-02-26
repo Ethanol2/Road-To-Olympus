@@ -62,5 +62,6 @@ MonoBehaviour:
   boots: {fileID: 0}
   weapon: {fileID: 0}
   rangedWeapon: {fileID: 0}
-  meleeAttacks: []
+  meleeAttacks:
+  - {fileID: 11400000, guid: ee0b429399de1c0459ca77a193718d25, type: 2}
   inventory: []

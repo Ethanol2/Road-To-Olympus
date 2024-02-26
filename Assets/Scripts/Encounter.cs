@@ -8,6 +8,8 @@ public class Encounter : ScriptableObject, IRandomizable
 {
     [SerializeField] private string displayName = "Something happens";
     public string DisplayName => displayName;
+    [SerializeField] private Sprite sprite;
+    public Sprite Sprite => sprite;
 
     [SerializeField, TextArea] private string description = "You see something in the distance";
     public string Description => description;
@@ -15,8 +17,11 @@ public class Encounter : ScriptableObject, IRandomizable
     [SerializeField] private EncounterType encounterType;
     public EncounterType Type => encounterType;
 
-    [SerializeField] private float encounterChance = 0.5f;
-    public float EncounterChance => encounterChance;
+    [SerializeField] private float pathEncounterChance = 0.5f;
+    public float PathEncounterChance => pathEncounterChance;
+
+    [SerializeField] private float foragingEncounterChance = 0.5f;
+    public float ForagingEncounterChance => foragingEncounterChance;
 
     [Space]
     [SerializeField] private Character leader;
@@ -40,7 +45,7 @@ public class Encounter : ScriptableObject, IRandomizable
     public bool NumbersHidden => numbersHidden;
 
     // IRandomizable
-    public float Chance => encounterChance;
+    public float Chance => pathMode ? pathEncounterChance : foragingEncounterChance;
 
     public string RandomizableType => encounterType.ToString();
 
@@ -48,4 +53,7 @@ public class Encounter : ScriptableObject, IRandomizable
     {
         Generic, Significant
     }
+
+    private bool pathMode = true;
+    public void SetPathMode(bool isPathMode) => pathMode = isPathMode;
 }

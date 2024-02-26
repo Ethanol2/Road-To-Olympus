@@ -7,7 +7,7 @@ public class TerrainInfo : MonoBehaviour
 {
     [Header("Objects")]
     [SerializeField] private PlayerInventory inventory;
-    [SerializeField] private MapPoint[] mapPoints = new MapPoint[0];
+    [SerializeField] private Milestone[] mapPoints = new Milestone[0];
 
     [Header("Generation Settings")]
     [SerializeField] private Vector2Int treesCount = new Vector2Int(60, 100);
@@ -22,6 +22,7 @@ public class TerrainInfo : MonoBehaviour
 
     [Space]
     [SerializeField, Range(0f, 1f)] private float villageChance = 0.2f;
+    [SerializeField, Range(0f, 2f)] private float encounterChance = 1f; 
 
     // Properties
     public Vector2Int TreesCount => treesCount;
@@ -33,13 +34,14 @@ public class TerrainInfo : MonoBehaviour
     public float EquipmentChance => equipmentChance;
     public float GeneralForagingChance => generalForagingChance;
     public float VillageChance => villageChance;
+    public float EncounterChance => encounterChance;
 
     public void PopulateMap(bool flipped)
     {
-        MapPoint[] points = mapPoints;
+        Milestone[] points = mapPoints;
         if (flipped)
         {
-            MapPoint[] pointsBackwards = new MapPoint[points.Length - 1];
+            Milestone[] pointsBackwards = new Milestone[points.Length - 1];
             int index = 0;
             for (int k = points.Length - 1; k >= 1; k--)
             {
@@ -49,15 +51,14 @@ public class TerrainInfo : MonoBehaviour
         }
         else
         {
-            List<MapPoint> temp = new List<MapPoint>(points);
+            List<Milestone> temp = new List<Milestone>(points);
             temp.RemoveAt(temp.Count - 1);
             points = temp.ToArray();
         }
         ProgressTracker.Instance.AddMapPoints(points);
-        foreach(MapPoint point in  points)
+        foreach(Milestone point in  points)
         {
             point.TerrainInfo = this;
-            point.ForagingChance = generalForagingChance;
         }
     }
 }

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f4c48fc7ae6e8f46ac91c4ac6043083, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  health: 10
+  health: 0.6849983
   money: 5
-  hunger: 0.42000014
-  rest: 0.18500005
+  hunger: 0.6360047
+  rest: 0.9999969
   knowledge: 1
-  speed: 12
+  speed: 10
   attack: 1
-  defense: 3
+  defense: 0
   OnStatsChanged:
     m_PersistentCalls:
       m_Calls: []

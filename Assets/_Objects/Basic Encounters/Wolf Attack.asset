@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Wolf Attack
   m_EditorClassIdentifier: 
   displayName: Wolves attack...
-  description: 3 wolves come on to the path, staring you down. Their yellow eyes
-    flash as they size you up. You know there are likely more just outside your field
-    of view, waiting to attack.
+  description: 3 wolves cross your path, staring you down. Their yellow eyes flash
+    as they size you up. You know there are likely more just outside your field of
+    view, waiting to attack.
   encounterType: 0
-  encounterChance: 0.5
+  pathEncounterChance: 0.5
+  foragingEncounterChance: 0.5
   leader: {fileID: 11400000, guid: 8eb623f25bb6a21469ccc55f23615be2, type: 2}
   minionTypes:
   - {fileID: 11400000, guid: 8eb623f25bb6a21469ccc55f23615be2, type: 2}

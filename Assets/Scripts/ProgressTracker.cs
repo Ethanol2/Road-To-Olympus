@@ -17,7 +17,7 @@ public class ProgressTracker : MonoBehaviour
     [SerializeField] private float uiTime = 0.5f;
 
     [Space]
-    [SerializeField] private List<MapPoint> mapPoints = new List<MapPoint>();
+    [SerializeField] private List<Milestone> mapPoints = new List<Milestone>();
     [SerializeField] private CameraController cam;
     [SerializeField] private DayNightCycle dayNightCycle;
 
@@ -29,11 +29,13 @@ public class ProgressTracker : MonoBehaviour
     [Header("Existing")]
     [SerializeField] private float tirednessPerTick = 0.001f;
     [SerializeField] private float hungerPerTick = 0.01f;
+    [SerializeField] private float healthRegenPerTick = 0.05f;
 
     [Header("Resting")]
     [SerializeField] private float timeToFullyRest = 0.25f;
     [SerializeField] private float hungerRestMod = 0.5f;
     [SerializeField] private float hoursRestGain = 0.125f;
+    [SerializeField] private float healthRegenPerRestMinute = 0.02f;
     [SerializeField] private Sprite restImage;
 
     [Header("Foraging")]
@@ -58,8 +60,8 @@ public class ProgressTracker : MonoBehaviour
     [SerializeField] private Button restButton;
     private TMP_Text restButtonText;
 
-    public List<MapPoint> MapPoints { get {  return mapPoints; } }
-    public MapPoint CurrentPoint { get => mapPoints[currentMapPoint]; }
+    public List<Milestone> MapPoints { get {  return mapPoints; } }
+    public Milestone CurrentPoint { get => mapPoints[currentMapPoint]; }
     public static float UITime
     {
         get
@@ -91,8 +93,43 @@ public class ProgressTracker : MonoBehaviour
     }
     private void OnTick()
     {
-        PlayerStats.Hunger -= hungerPerTick;
-        PlayerStats.Rest -= tirednessPerTick;
+        OnTick(tirednessPerTick, false, hungerPerTick, healthRegenPerTick);
+    }
+    private void OnTick(float tiredness, bool isResting, float hunger, float health)
+    {
+        if (PlayerStats.Hunger < 0.1f)
+        {
+            PlayerStats.Health -= hunger;
+        }
+        PlayerStats.Hunger -= hunger;
+
+        if (isResting)
+        {
+            PlayerStats.Rest += tiredness;
+        }
+        else
+        {
+            if (PlayerStats.Rest < 0.05f)
+            {
+                PlayerStats.Health -= tiredness;
+            }
+            PlayerStats.Rest -= tiredness;
+        }
+
+        if (PlayerStats.Health < 1f)
+        {
+            float mod = 1f;
+            if (PlayerStats.Hunger < 0.5f)
+            {
+                mod = (PlayerStats.Hunger / 0.5f);
+            }
+            if (PlayerStats.Rest < 0.1f)
+            {
+                mod *= PlayerStats.Rest / 0.1f;
+            }
+
+            PlayerStats.Health += health * mod;
+        }
     }
     private void OnStatsChange()
     {
@@ -104,11 +141,27 @@ public class ProgressTracker : MonoBehaviour
     {
         cam.SetCamPosition(mapPoints[0]);
     }
-    public void AddMapPoints(MapPoint[] points)
+    
+    public void AddMapPoints(Milestone[] points)
     {
         mapPoints.AddRange(points);
-        totalKM = mapPoints.Count * 10;
+        totalKM = mapPoints.Count;
         kilometersRemaining = totalKM;
+    }
+    public Milestone[] GetNextMilesStones(int count)
+    {
+        if (currentMapPoint == mapPoints.Count - 1) { return null; }
+        List<Milestone> milestones = new List<Milestone>();
+
+        for (int k = currentMapPoint; k < currentMapPoint + count; k++)
+        {
+            if (k >= mapPoints.Count) { break; }
+            milestones.Add(mapPoints[k]);
+        }
+
+        Debug.Log("[ProgressTracker] Milestone return count:" +  milestones.Count);
+
+        return milestones.ToArray();
     }
     private void Travel()
     {
@@ -123,14 +176,17 @@ public class ProgressTracker : MonoBehaviour
             return;
         }
 
-        travelUI.Travel(10, MovePlayer);
+        Milestone[] milestones = GetNextMilesStones(10);
+        if (milestones == null) { return; }
+
+        travelUI.Travel(milestones, MovePlayer);
     }
     public void MovePlayer(int finalDistance) => MovePlayer(finalDistance, true);
     public void MovePlayer(int finalDistance, bool forward)
     {
         int mod = forward ? 1 : -1;
-        kilometersRemaining = kilometersRemaining + (10 * -mod);
-        currentMapPoint = currentMapPoint + mod;
+        kilometersRemaining = kilometersRemaining + (finalDistance * -mod);
+        currentMapPoint = currentMapPoint + (finalDistance * mod);
 
         bool isLastPoint = false;
         if (currentMapPoint < 0) { currentMapPoint = 0; }
@@ -174,7 +230,7 @@ public class ProgressTracker : MonoBehaviour
         dayNightCycle.AddTime(Mathf.RoundToInt(DayNightCycle.TOTAL_MINUTES * timePerForage));
 
         int numItemsFound = 0;
-        float chance = CurrentPoint.ForagingChance * CurrentPoint.ForagingModifier;
+        float chance = CurrentPoint.ForagingChance;
         for (int k = 0; k < maxItemsPerForage; k++)
         {
             Debug.Log("Foraging chance: " + chance);
@@ -295,8 +351,8 @@ public class ProgressTracker : MonoBehaviour
             {
                 timeToMinute = timePerMinute;
                 minutesAdded++;
-                PlayerStats.Rest += restPerMinute;
-                PlayerStats.Hunger -= hungerPerMinute;
+                OnTick(restPerMinute, true, hungerPerMinute, healthRegenPerRestMinute);
+
                 dayNightCycle.AddTime(1);
             }
 

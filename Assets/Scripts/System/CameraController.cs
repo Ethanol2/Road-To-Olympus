@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float restingHeight = 0.2f;
     [SerializeField] private Transform olympus;
 
-    public void SetCamPosition(MapPoint point, bool isResting = false)
+    public void SetCamPosition(Milestone point, bool isResting = false)
     {
         Transform camPos = point.transform;
 
@@ -26,11 +26,11 @@ public class CameraController : MonoBehaviour
         }
         this.transform.LookAt(olympus);
     }
-    public void LerpToCamPosition(MapPoint point, bool isResting = false)
+    public void LerpToCamPosition(Milestone point, bool isResting = false)
     {
         StartCoroutine(CamLerpRoutine(point, isResting));
     }
-    private IEnumerator CamLerpRoutine(MapPoint point, bool isResting)
+    private IEnumerator CamLerpRoutine(Milestone point, bool isResting)
     {
         Vector3 positionTarget;
         Vector3 start = this.transform.position;
@@ -58,7 +58,7 @@ public class CameraController : MonoBehaviour
 
         this.transform.position = positionTarget;
     }
-    public void LookAt(MapPoint point)
+    public void LookAt(Milestone point)
     {
         if (!point) { return; }
 

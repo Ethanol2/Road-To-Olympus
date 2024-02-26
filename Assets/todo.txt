@@ -1,4 +1,0 @@
-TODO:
-
-Change equip button to action button
-Everything else.

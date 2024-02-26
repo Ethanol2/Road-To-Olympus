@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapPoint : MonoBehaviour
+public class Milestone : MonoBehaviour
 {
     public bool HasVillage = false;
     public TerrainInfo TerrainInfo;
-    public float ForagingChance = 1f;
-    public float ForagingModifier = 1f;
+
+    [Space]
+    [SerializeField] private float foragingModifier = 1f;
 
     private void Start()
     {
@@ -24,4 +25,7 @@ public class MapPoint : MonoBehaviour
             return "Nothing much here...";
         }
     }
+    public float ForagingChance => TerrainInfo ? TerrainInfo.ForagingChance * foragingModifier : 1f;
+    public float EncounterChance => TerrainInfo ? TerrainInfo.EncounterChance : 1f;
+    public float ForagingModifier { get { return foragingModifier; } set {  foragingModifier = value; } }
 }
