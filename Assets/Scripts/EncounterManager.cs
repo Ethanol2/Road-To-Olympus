@@ -69,7 +69,7 @@ public class EncounterManager : MonoBehaviour
     {
         if (milestone == null) { milestone = ProgressTracker.Instance.CurrentPoint; }
 
-        float chance = milestone.EncounterChance * (foraging ? foragingEncounterChance : travelEnounterChance);
+        float chance = milestone.EncounterChance * (foraging ? foragingEncounterChance : travelEnounterChance) * 0.05f;
         float roll = Random.Range(0f, 1f);
 
         if (roll > chance)

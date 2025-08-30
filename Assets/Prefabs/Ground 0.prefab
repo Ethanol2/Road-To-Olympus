@@ -47,8 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 1
-  ForagingModifier: 1
+  foragingModifier: 1
 --- !u!1 &4185264961764476776
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,8 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 1
-  ForagingModifier: 1
+  foragingModifier: 1
 --- !u!1 &4456699272480394696
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +174,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5958420417713025444}
-  m_Mesh: {fileID: 4092214343419023441, guid: 52a932fab657c274eab617bbbe93f710, type: 3}
+  m_Mesh: {fileID: 4092214343419023441, guid: 6a49d283afa505122af31768f3379a3d, type: 3}
 --- !u!23 &5958420417713025433
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -232,7 +230,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4092214343419023441, guid: 52a932fab657c274eab617bbbe93f710, type: 3}
+  m_Mesh: {fileID: 4092214343419023441, guid: 6a49d283afa505122af31768f3379a3d, type: 3}
 --- !u!1 &5958420418375075803
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,6 +293,7 @@ MonoBehaviour:
   junkChance: 1.5
   equipmentChance: 0.72
   villageChance: 0.5
+  encounterChance: 1
 --- !u!1 &6403240885411191516
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,8 +341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 1
-  ForagingModifier: 1
+  foragingModifier: 1
 --- !u!1 &6484933550058642093
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,8 +389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 1
-  ForagingModifier: 1
+  foragingModifier: 1
 --- !u!1 &6664931963927984530
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,8 +437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 1
-  ForagingModifier: 1
+  foragingModifier: 1
 --- !u!1 &8028803182297000027
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,8 +485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasVillage: 0
   TerrainInfo: {fileID: 0}
-  ForagingChance: 1
-  ForagingModifier: 1
+  foragingModifier: 1
 --- !u!1001 &1302947202858630121
 PrefabInstance:
   m_ObjectHideFlags: 0
